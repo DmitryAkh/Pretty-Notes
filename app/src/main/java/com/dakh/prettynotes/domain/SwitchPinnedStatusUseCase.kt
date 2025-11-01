@@ -1,8 +1,10 @@
 package com.dakh.prettynotes.domain
 
-class SwitchPinnedStatusUseCase {
+class SwitchPinnedStatusUseCase(
+    private val repository: NotesRepository
+) {
 
     operator fun invoke(id: Int) {
-        TODO()
+        repository.switchPinnedStatus(id)
     }
 }
