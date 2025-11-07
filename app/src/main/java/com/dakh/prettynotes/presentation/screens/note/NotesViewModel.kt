@@ -42,6 +42,7 @@ class NotesViewModel : ViewModel() {
     private val scope = CoroutineScope(Dispatchers.IO)
 
     init {
+        addSomeNotes()
         query
             .onEach { input ->
                 _state.update {
@@ -63,16 +64,12 @@ class NotesViewModel : ViewModel() {
                 }
             }
             .launchIn(scope)
-
-
-
-
     }
 
     // TODO: don`t forget remove it
 
     private fun addSomeNotes() {
-        repeat(50) {
+        repeat(50_000) {
         addNoteUseCase(title = "Title №$it", content = "Content №$it")
         }
     }
