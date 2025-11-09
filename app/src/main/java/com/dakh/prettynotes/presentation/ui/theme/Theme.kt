@@ -1,7 +1,6 @@
 package com.dakh.prettynotes.presentation.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -11,11 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = BrownDark,
+    primary = Brown,
     onPrimary = White,
-    background = Grey900,
+    background = Grey200,
     onBackground = Grey100,
-    surface = Grey800,
+    surface = Grey300,
     onSurface = Grey200,
     onSurfaceVariant = Grey300,
 )
@@ -32,7 +31,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun PrettyNotesTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false, // isSystemInDarkTheme()
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
