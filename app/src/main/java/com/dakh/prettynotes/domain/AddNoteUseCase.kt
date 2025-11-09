@@ -1,8 +1,13 @@
 package com.dakh.prettynotes.domain
 
-class AddNoteUseCase {
+class AddNoteUseCase(
+    private val repository: NotesRepository
+) {
 
-    fun addNote(note: Note) {
-        TODO()
+    operator fun invoke(
+        title: String,
+        content: String
+    ) {
+        repository.addNote(title, content)
     }
 }

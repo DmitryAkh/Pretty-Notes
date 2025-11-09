@@ -1,8 +1,10 @@
 package com.dakh.prettynotes.domain
 
-class GetNoteUseCase {
+class GetNoteUseCase(
+    private val repository: NotesRepository
+) {
 
     operator fun invoke(id: Int): Note {
-        TODO()
+       return repository.getNote(id)
     }
 }
