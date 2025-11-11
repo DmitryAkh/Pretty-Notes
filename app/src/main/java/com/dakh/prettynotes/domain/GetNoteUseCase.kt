@@ -4,7 +4,7 @@ class GetNoteUseCase(
     private val repository: NotesRepository
 ) {
 
-    operator fun invoke(id: Int): Note {
+    suspend operator fun invoke(id: Int): Note {
        return repository.getNote(id)
     }
 }

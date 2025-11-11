@@ -1,10 +1,11 @@
 package com.dakh.prettynotes.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.dakh.prettynotes.presentation.screens.note.NotesScreen
+import com.dakh.prettynotes.presentation.screens.creation.CreateNoteScreen
 import com.dakh.prettynotes.presentation.ui.theme.PrettyNotesTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +14,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PrettyNotesTheme {
-                NotesScreen()
+//                NotesScreen(
+//                    onNoteClick = {
+//                        Log.d("MainActivity", "onNoteClick: $it")
+//                    },
+//                    onAddNoteClick = {
+//                        Log.d("MainActivity", "onAddNoteClick")
+//                    }
+//
+                CreateNoteScreen(
+                    onFinished = {
+                        Log.d("CreateNoteScreen", " Finished")
+                    }
+                )
             }
         }
     }
