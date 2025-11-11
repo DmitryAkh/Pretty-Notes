@@ -4,16 +4,10 @@ package com.dakh.prettynotes.presentation.screens.note
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dakh.prettynotes.data.TestNotesRepositoryImpl
-import com.dakh.prettynotes.domain.AddNoteUseCase
-import com.dakh.prettynotes.domain.DeleteNoteUseCase
-import com.dakh.prettynotes.domain.EditNoteUseCase
 import com.dakh.prettynotes.domain.GetAllNotesUseCase
-import com.dakh.prettynotes.domain.GetNoteUseCase
 import com.dakh.prettynotes.domain.Note
 import com.dakh.prettynotes.domain.SearchNotesUseCase
 import com.dakh.prettynotes.domain.SwitchPinnedStatusUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

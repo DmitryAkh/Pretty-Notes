@@ -1,6 +1,5 @@
 package com.dakh.prettynotes.presentation.screens.creation
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dakh.prettynotes.data.TestNotesRepositoryImpl
