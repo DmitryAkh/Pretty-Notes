@@ -25,11 +25,11 @@ class CreateNoteViewModel() : ViewModel() {
             }
 
             is CreateNoteCommand.InputContent -> {
-                _state.update { prevState ->
-                    if (prevState is CreateNoteState.Creation) {
-                        prevState.copy(
+                _state.update { state ->
+                    if (state is CreateNoteState.Creation) {
+                        state.copy(
                             content = command.content,
-                            isSaveEnabled = prevState.title.isNotBlank() && command.content.isNotBlank()
+                            isSaveEnabled = state.title.isNotBlank() && command.content.isNotBlank()
                         )
                     } else {
                         CreateNoteState.Creation(content = command.content)
@@ -38,11 +38,11 @@ class CreateNoteViewModel() : ViewModel() {
             }
 
                 is CreateNoteCommand.InputTitle -> {
-                    _state.update { prevState ->
-                        if (prevState is CreateNoteState.Creation) {
-                            prevState.copy(
+                    _state.update { state ->
+                        if (state is CreateNoteState.Creation) {
+                            state.copy(
                                 title = command.title,
-                                isSaveEnabled = command.title.isNotBlank() && prevState.content.isNotBlank()
+                                isSaveEnabled = command.title.isNotBlank() && state.content.isNotBlank()
                             )
                         } else {
                             CreateNoteState.Creation(title = command.title)
@@ -53,19 +53,20 @@ class CreateNoteViewModel() : ViewModel() {
                 CreateNoteCommand.SaveNote -> {
 
                     viewModelScope.launch {
-                        _state.update { prevState ->
-                            if (prevState is CreateNoteState.Creation) {
-                                val title = prevState.title
-                                val content = prevState.content
+                        _state.update { state ->
+                            if (state is CreateNoteState.Creation) {
+                                val title = state.title
+                                val content = state.content
                                 addNoteUseCase(title = title, content = content)
                                 CreateNoteState.Finished
                             } else {
-                                prevState
+                                state
                             }
                         }
                     }
                 }
             }
+
         }
     }
 
