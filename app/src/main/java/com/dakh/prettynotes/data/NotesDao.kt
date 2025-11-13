@@ -12,6 +12,9 @@ interface NotesDao {
     @Query("SELECT * FROM notes ORDER BY updatedAt DESC")
     fun getAllNotes(): Flow<List<NoteDBModel>>
 
+    @Query("SELECT * FROM notes WHERE id == :id")
+    suspend fun getNote(id: Int): NoteDBModel
+
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%' ORDER BY updatedAt DESC")
     fun searchNotes(query: String): Flow<List<NoteDBModel>>
 
@@ -22,5 +25,5 @@ interface NotesDao {
     suspend fun switchPinnedStatus(id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addNote(noteDBModel: NoteDBModel)
+    suspend fun addOrEditNote(noteDBModel: NoteDBModel)
 }

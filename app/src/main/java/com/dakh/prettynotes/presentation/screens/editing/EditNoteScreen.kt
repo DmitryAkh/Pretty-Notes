@@ -1,5 +1,6 @@
 package com.dakh.prettynotes.presentation.screens.editing
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,8 +40,9 @@ import com.dakh.prettynotes.presentation.utils.DateFormatter
 fun EditNoteScreen(
     id: Int,
     modifier: Modifier = Modifier,
+    context: Context = LocalContext.current.applicationContext,
     viewModel: EditNoteViewModel = viewModel {
-        EditNoteViewModel(id)
+        EditNoteViewModel(id, context)
     },
     onFinished: () -> Unit,
 ) {
@@ -66,15 +69,15 @@ fun EditNoteScreen(
                             actionIconContentColor = MaterialTheme.colorScheme.onSurface
                         ),
                         navigationIcon = {
-                           Icon(
-                               modifier = Modifier
-                                   .padding(start = 16.dp, end = 8.dp)
-                                   .clickable {
-                                       viewModel.processCommand(EditNoteCommand.Back)
-                                   },
-                               imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                               contentDescription = "Back"
-                           )
+                            Icon(
+                                modifier = Modifier
+                                    .padding(start = 16.dp, end = 8.dp)
+                                    .clickable {
+                                        viewModel.processCommand(EditNoteCommand.Back)
+                                    },
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
                         },
                         actions = {
                             Icon(
@@ -89,7 +92,7 @@ fun EditNoteScreen(
                         }
                     )
                 }
-                ) { innerPadding ->
+            ) { innerPadding ->
                 Column(
                     modifier = Modifier.padding(innerPadding)
                 ) {
@@ -98,13 +101,13 @@ fun EditNoteScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
                         value = currentState.note.title,
-                        onValueChange = {viewModel.processCommand(InputTitle(title = it))},
+                        onValueChange = { viewModel.processCommand(InputTitle(title = it)) },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
-                            ),
+                        ),
                         textStyle = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
@@ -131,7 +134,7 @@ fun EditNoteScreen(
                             .padding(horizontal = 8.dp)
                             .weight(1f),
                         value = currentState.note.content,
-                        onValueChange = {viewModel.processCommand(InputContent(content = it))},
+                        onValueChange = { viewModel.processCommand(InputContent(content = it)) },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
@@ -173,6 +176,7 @@ fun EditNoteScreen(
                 }
             }
         }
+
         EditNoteState.Finished -> {
             LaunchedEffect(key1 = Unit) {
                 onFinished()

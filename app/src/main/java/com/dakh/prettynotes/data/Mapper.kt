@@ -21,3 +21,9 @@ fun NoteDBModel.toNote(): Note {
         isPinned = this.isPinned
     )
 }
+
+fun List<NoteDBModel>.toListNote(): List<Note> {
+   return this.map {
+        it.toNote()
+    }
+}
