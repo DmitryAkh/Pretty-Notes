@@ -1,16 +1,17 @@
 package com.dakh.prettynotes.presentation.screens.creation
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dakh.prettynotes.data.TestNotesRepositoryImpl
+import com.dakh.prettynotes.data.NotesRepositoryImpl
 import com.dakh.prettynotes.domain.AddNoteUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CreateNoteViewModel() : ViewModel() {
-    private val repository = TestNotesRepositoryImpl
+class CreateNoteViewModel(context: Context) : ViewModel() {
+    private val repository = NotesRepositoryImpl.getInstance(context)
     private val addNoteUseCase = AddNoteUseCase(repository)
 
     private val _state = MutableStateFlow<CreateNoteState>(CreateNoteState.Creation())

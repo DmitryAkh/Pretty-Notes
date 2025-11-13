@@ -1,9 +1,10 @@
 package com.dakh.prettynotes.presentation.screens.note
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dakh.prettynotes.data.TestNotesRepositoryImpl
+import com.dakh.prettynotes.data.NotesRepositoryImpl
 import com.dakh.prettynotes.domain.GetAllNotesUseCase
 import com.dakh.prettynotes.domain.Note
 import com.dakh.prettynotes.domain.SearchNotesUseCase
@@ -18,9 +19,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class NotesViewModel : ViewModel() {
+class NotesViewModel(context: Context) : ViewModel() {
 
-    private val repository = TestNotesRepositoryImpl
+    private val repository = NotesRepositoryImpl.getInstance(context)
 
     private val getAllNotesUseCase = GetAllNotesUseCase(repository)
     private val switchPinnedStatusUseCase = SwitchPinnedStatusUseCase(repository)

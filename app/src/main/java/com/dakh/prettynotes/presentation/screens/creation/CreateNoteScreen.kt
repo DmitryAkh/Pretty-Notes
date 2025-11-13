@@ -1,5 +1,6 @@
 package com.dakh.prettynotes.presentation.screens.creation
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,8 +36,11 @@ import com.dakh.prettynotes.presentation.utils.DateFormatter
 @Composable
 fun CreateNoteScreen(
     modifier: Modifier = Modifier,
-    viewModel: CreateNoteViewModel = viewModel(),
-    onFinished: () -> Unit
+    context: Context = LocalContext.current.applicationContext,
+    viewModel: CreateNoteViewModel = viewModel {
+        CreateNoteViewModel(context)
+    },
+    onFinished: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
     val currentState = state.value
@@ -59,19 +64,19 @@ fun CreateNoteScreen(
                             navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                         ),
                         navigationIcon = {
-                           Icon(
-                               modifier = Modifier
-                                   .padding(start = 16.dp, end = 8.dp)
-                                   .clickable {
-                                       viewModel.processCommand(CreateNoteCommand.Back)
-                                   },
-                               imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                               contentDescription = "Back"
-                           )
+                            Icon(
+                                modifier = Modifier
+                                    .padding(start = 16.dp, end = 8.dp)
+                                    .clickable {
+                                        viewModel.processCommand(CreateNoteCommand.Back)
+                                    },
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
                         }
                     )
                 }
-                ) { innerPadding ->
+            ) { innerPadding ->
                 Column(
                     modifier = Modifier.padding(innerPadding)
                 ) {
@@ -80,13 +85,19 @@ fun CreateNoteScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
                         value = currentState.title,
-                        onValueChange = {viewModel.processCommand(CreateNoteCommand.InputTitle(title = it))},
+                        onValueChange = {
+                            viewModel.processCommand(
+                                CreateNoteCommand.InputTitle(
+                                    title = it
+                                )
+                            )
+                        },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
-                            ),
+                        ),
                         textStyle = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
@@ -113,7 +124,13 @@ fun CreateNoteScreen(
                             .padding(horizontal = 8.dp)
                             .weight(1f),
                         value = currentState.content,
-                        onValueChange = {viewModel.processCommand(CreateNoteCommand.InputContent(content = it))},
+                        onValueChange = {
+                            viewModel.processCommand(
+                                CreateNoteCommand.InputContent(
+                                    content = it
+                                )
+                            )
+                        },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
@@ -155,6 +172,7 @@ fun CreateNoteScreen(
                 }
             }
         }
+
         CreateNoteState.Finished -> {
             LaunchedEffect(key1 = Unit) {
                 onFinished()
