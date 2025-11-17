@@ -1,15 +1,16 @@
 package com.dakh.prettynotes.data
 
-import android.content.Context
 import com.dakh.prettynotes.domain.Note
 import com.dakh.prettynotes.domain.NotesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class NotesRepositoryImpl private constructor(context: Context) : NotesRepository {
+class NotesRepositoryImpl @Inject constructor(
+    private val notesDao: NotesDao
+) : NotesRepository {
 
-    private val notesDatabase = NotesDatabase.getInstance(context)
-    private val notesDao = notesDatabase.notesDao()
+
 
     override suspend fun addNote(
         title: String,
@@ -53,22 +54,5 @@ class NotesRepositoryImpl private constructor(context: Context) : NotesRepositor
 
     override suspend fun switchPinnedStatus(id: Int) {
         notesDao.switchPinnedStatus(id)
-    }
-
-    companion object {
-
-        private var instance: NotesRepositoryImpl? = null
-
-        private val LOCK = Any()
-
-        fun getInstance(context: Context): NotesRepositoryImpl {
-
-            instance?.let {return it}
-
-            synchronized(LOCK) {
-                instance?.let {return it}
-                return NotesRepositoryImpl(context).also { instance = it }
-            }
-        }
     }
 }
