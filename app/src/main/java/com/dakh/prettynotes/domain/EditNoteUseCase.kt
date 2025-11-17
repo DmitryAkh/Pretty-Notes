@@ -1,6 +1,8 @@
 package com.dakh.prettynotes.domain
 
-class EditNoteUseCase(
+import javax.inject.Inject
+
+class EditNoteUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 

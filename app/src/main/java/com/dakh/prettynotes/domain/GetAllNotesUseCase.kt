@@ -1,8 +1,9 @@
 package com.dakh.prettynotes.domain
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetAllNotesUseCase(
+class GetAllNotesUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 
