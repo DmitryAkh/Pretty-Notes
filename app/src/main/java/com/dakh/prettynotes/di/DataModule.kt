@@ -1,7 +1,7 @@
 package com.dakh.prettynotes.di
 
 import android.content.Context
-import androidx.room.Database
+import androidx.room.Room
 import com.dakh.prettynotes.data.NotesDao
 import com.dakh.prettynotes.data.NotesDatabase
 import com.dakh.prettynotes.data.NotesRepositoryImpl
@@ -30,7 +30,11 @@ interface DataModule {
         fun provideDatabase(
            @ApplicationContext context: Context
         ): NotesDatabase {
-            return NotesDatabase.getInstance(context)
+            return Room.databaseBuilder(
+                context = context,
+                klass = NotesDatabase::class.java,
+                name =  "notes.db"
+            ).fallbackToDestructiveMigration(dropAllTables = true).build()
         }
 
         @Singleton
