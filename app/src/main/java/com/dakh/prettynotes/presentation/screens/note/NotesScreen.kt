@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.dakh.prettynotes.R
+import com.dakh.prettynotes.domain.ContentItem
 import com.dakh.prettynotes.domain.Note
 import com.dakh.prettynotes.presentation.ui.theme.OtherNotesColors
 import com.dakh.prettynotes.presentation.ui.theme.PinnedNotesColors
@@ -272,14 +273,21 @@ fun NoteCard(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = note.content,
-            maxLines = 3,
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Medium,
-            overflow = TextOverflow.Ellipsis
-        )
+        note
+            .content
+            .filterIsInstance<ContentItem.Text>()
+            .joinToString("\n") { it.content }
+            .let {
+            Text(
+                text = it,
+                maxLines = 3,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Medium,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
     }
 }
 
