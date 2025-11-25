@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,13 +34,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import com.dakh.prettynotes.R
 import com.dakh.prettynotes.domain.ContentItem
 import com.dakh.prettynotes.domain.Note
@@ -81,7 +86,7 @@ fun NotesScreen(
             item {
                 Title(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    text = "All Notes"
+                    text = stringResource(R.string.all_notes)
                 )
             }
 
@@ -97,13 +102,14 @@ fun NotesScreen(
                 )
             }
 
-            item { Spacer(modifier = Modifier.height(24.dp)) }
+            if (state.pinnedNotes.isNotEmpty()) {
+                item { Spacer(modifier = Modifier.height(24.dp)) }
 
             if (state.pinnedNotes.isNotEmpty()) {
                 item {
                     Subtitle(
                         modifier = Modifier.padding(horizontal = 24.dp),
-                        text = "Pinned"
+                        text = stringResource(R.string.pinned)
                     )
                 }
             }
@@ -113,7 +119,7 @@ fun NotesScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(24.dp)
+                    contentPadding = PaddingValues(top = 24.dp, start = 24.dp, end =  24.dp)
                 )
                 {
                     state.pinnedNotes.forEachIndexed { index, note ->
@@ -135,12 +141,13 @@ fun NotesScreen(
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
 
-            if (state.otherNotes.isNotEmpty()) {
-                item {
-                    Subtitle(
-                        modifier = Modifier.padding(horizontal = 24.dp),
-                        text = "Others"
-                    )
+                if (state.otherNotes.isNotEmpty()) {
+                    item {
+                        Subtitle(
+                            modifier = Modifier.padding(horizontal = 24.dp),
+                            text = stringResource(R.string.others)
+                        )
+                    }
                 }
             }
 
@@ -205,7 +212,7 @@ private fun SearchBar(
         onValueChange = onQueryChange,
         placeholder = {
             Text(
-                text = "Search...",
+                text = stringResource(R.string.search),
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -213,7 +220,7 @@ private fun SearchBar(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search Notes",
+                contentDescription = stringResource(R.string.search_notes),
                 tint = MaterialTheme.colorScheme.onSurface
             )
         },
@@ -249,6 +256,9 @@ fun NoteCard(
     onNoteClick: (Note) -> Unit,
     onLongClick: (Note) -> Unit,
 ) {
+    val thereIsImage = note.content.filterIsInstance<ContentItem.Image>()
+        .firstOrNull()?.url
+
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
@@ -257,36 +267,39 @@ fun NoteCard(
                 onClick = { onNoteClick(note) },
                 onLongClick = { onLongClick(note) },
             )
-            .padding(16.dp)
     ) {
-        Text(
-            text = note.title,
-            fontSize = 16.sp,
-            maxLines = 1,
-            color = MaterialTheme.colorScheme.onSurface,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = DateFormatter.formatDateToString(note.updatedAt),
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(24.dp))
+        if(thereIsImage != null) {
+            TitleAndDateWithImage(
+                modifier = Modifier,
+                url = thereIsImage,
+                title = note.title,
+                date = DateFormatter.formatDateToString(note.updatedAt)
+            )
+        } else {
+            TitleAndDate(
+                modifier = Modifier,
+                title = note.title,
+                date = DateFormatter.formatDateToString(note.updatedAt)
+            )
+        }
         note
             .content
             .filterIsInstance<ContentItem.Text>()
+            .filter { it.content.isNotBlank() }
             .joinToString("\n") { it.content }
-            .let {
-            Text(
-                text = it,
-                maxLines = 3,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Medium,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+            .takeIf { it.isNotBlank() }
+            ?.let {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 24.dp, top = 16.dp, bottom = 16.dp),
+                    text = it,
+                    maxLines = 3,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
     }
 }
@@ -303,12 +316,12 @@ fun Placeholder(modifier: Modifier) {
         ) {
             Icon(
                 painter = painterResource(R.drawable.placeholder),
-                contentDescription = "No notes",
+                contentDescription = stringResource(R.string.no_notes),
                 tint = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = modifier.height(16.dp))
             Text(
-                text = "Add your first note",
+                text = stringResource(R.string.add_your_first_note),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onBackground
@@ -316,3 +329,82 @@ fun Placeholder(modifier: Modifier) {
         }
     }
 }
+
+@Composable
+fun TitleAndDateWithImage(
+    modifier: Modifier,
+    url: String,
+    title: String,
+    date: String
+) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .heightIn(max = 100.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp)),
+                model = url,
+                contentDescription = stringResource(R.string.first_image_from_note),
+                contentScale = ContentScale.FillWidth
+            )
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.8f)
+                            )
+                        )
+                    )
+            )
+            Text(
+                modifier = Modifier
+                    .padding(top = 24.dp, start = 24.dp),
+                text = title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                color = MaterialTheme.colorScheme.onPrimary,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                modifier = Modifier
+                    .padding(top = 48.dp, start = 24.dp),
+                text = date,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
+        }
+}
+
+@Composable
+fun TitleAndDate(
+    modifier: Modifier,
+    title: String,
+    date: String
+) {
+    Text(
+        modifier = modifier
+            .padding(top = 16.dp, start = 24.dp),
+        text = title,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.SemiBold,
+        maxLines = 1,
+        color = MaterialTheme.colorScheme.onSurface,
+        overflow = TextOverflow.Ellipsis
+    )
+    Text(
+        modifier = modifier
+            .padding(top = 8.dp, start = 24.dp),
+        text = date,
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+

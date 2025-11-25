@@ -18,6 +18,7 @@ ksp = "2.2.0-2.0.2"
 hilt = "2.57.2"
 hiltNavigationCompose = "1.3.0"
 coil = "3.3.0"
+splashScreen = "1.0.0"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -47,6 +48,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+splashScreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 
 
 [plugins]
