@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.androidTestImplementation
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -45,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.splashScreen)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.serialization.json)

@@ -8,7 +8,6 @@ data class NoteDBModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val title: String,
-    val content: String,
     val updatedAt: Long,
     val isPinned: Boolean
 )
