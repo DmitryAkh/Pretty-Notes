@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pretty Notes</string>
+    <string name="all_notes">Все заметки</string>
+    <string name="pinned">Закрепленные</string>
+    <string name="others">Остальные</string>
+    <string name="search">Поиск…</string>
+    <string name="search_notes">Поиск заметок</string>
+    <string name="no_notes">Нет заметок</string>
+    <string name="add_your_first_note">Добавьте вашу \nпервую заметку</string>
+    <string name="first_image_from_note">Первое изображение из заметки</string>
+    <string name="edit_note">Редактирование</string>
+    <string name="back">Назад</string>
+    <string name="add_photo_from_gallery">Добавить фото из галлереи</string>
+    <string name="delete_note">Удалить</string>
+    <string name="title">Название</string>
+    <string name="save_note">Сохранить заметку</string>
+    <string name="note_something_down">Введите что-нибудь</string>
+    <string name="create_note">Создание заметки</string>
+    <string name="remove_image">Удалить изображение</string>
+    <string name="image_from_gallery">Изображение из галлереи</string>
+    <string name="just_now">Только что</string>
+    <string name="h_ago">%1$d h ago</string>
+</resources>

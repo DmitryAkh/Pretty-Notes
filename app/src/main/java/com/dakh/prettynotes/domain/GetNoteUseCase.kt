@@ -1,10 +1,12 @@
 package com.dakh.prettynotes.domain
 
-class GetNoteUseCase(
+import javax.inject.Inject
+
+class GetNoteUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 
-    operator fun invoke(id: Int): Note {
+    suspend operator fun invoke(id: Int): Note {
        return repository.getNote(id)
     }
 }

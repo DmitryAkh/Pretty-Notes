@@ -1,10 +1,12 @@
 package com.dakh.prettynotes.domain
 
-class DeleteNoteUseCase(
+import javax.inject.Inject
+
+class DeleteNoteUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 
-    operator fun invoke(id: Int) {
+    suspend operator fun invoke(id: Int) {
         repository.deleteNote(id)
     }
 }

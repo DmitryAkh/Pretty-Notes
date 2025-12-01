@@ -1,13 +1,20 @@
 package com.dakh.prettynotes.domain
 
-class AddNoteUseCase(
+import javax.inject.Inject
+
+class AddNoteUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 
-    operator fun invoke(
+    suspend operator fun invoke(
         title: String,
-        content: String
+        content: List<ContentItem>
     ) {
-        repository.addNote(title, content)
+        repository.addNote(
+           title =  title,
+            content = content,
+            isPinned = false,
+            updatedAt = System.currentTimeMillis()
+        )
     }
 }

@@ -1,10 +1,12 @@
 package com.dakh.prettynotes.domain
 
-class SwitchPinnedStatusUseCase(
+import javax.inject.Inject
+
+class SwitchPinnedStatusUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 
-    operator fun invoke(id: Int) {
+    suspend operator fun invoke(id: Int) {
         repository.switchPinnedStatus(id)
     }
 }
