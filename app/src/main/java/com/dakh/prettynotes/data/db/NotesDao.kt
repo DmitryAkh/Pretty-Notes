@@ -1,11 +1,14 @@
-package com.dakh.prettynotes.data
+package com.dakh.prettynotes.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.dakh.prettynotes.domain.ContentItem
+import com.dakh.prettynotes.data.models.ContentItemDbModel
+import com.dakh.prettynotes.data.models.NoteDBModel
+import com.dakh.prettynotes.data.models.NoteWithContentDbModel
+import com.dakh.prettynotes.domain.entity.ContentItem
 import kotlinx.coroutines.flow.Flow
 
 @Dao

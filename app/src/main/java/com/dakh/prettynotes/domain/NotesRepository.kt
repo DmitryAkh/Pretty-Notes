@@ -1,5 +1,7 @@
 package com.dakh.prettynotes.domain
 
+import com.dakh.prettynotes.domain.entity.ContentItem
+import com.dakh.prettynotes.domain.entity.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NotesRepository {

@@ -1,7 +1,9 @@
-package com.dakh.prettynotes.data
+package com.dakh.prettynotes.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.dakh.prettynotes.data.models.ContentItemDbModel
+import com.dakh.prettynotes.data.models.NoteDBModel
 
 @Database(
     entities = [NoteDBModel::class, ContentItemDbModel::class],

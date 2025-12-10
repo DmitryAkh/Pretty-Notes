@@ -1,4 +1,4 @@
-package com.dakh.prettynotes.presentation.screens.creation
+package com.dakh.prettynotes.presentation.screen.editing
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,15 +33,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.dakh.prettynotes.R
+import com.dakh.prettynotes.presentation.screen.editing.EditNoteCommand.DeleteImage
+import com.dakh.prettynotes.presentation.screen.editing.EditNoteCommand.InputContent
+import com.dakh.prettynotes.presentation.screen.editing.EditNoteCommand.InputTitle
 import com.dakh.prettynotes.presentation.ui.theme.Content
 import com.dakh.prettynotes.presentation.ui.theme.CustomIcons
 import com.dakh.prettynotes.presentation.utils.DateFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateNoteScreen(
+fun EditNoteScreen(
+    id: Int,
     modifier: Modifier = Modifier,
-    viewModel: CreateNoteViewModel = hiltViewModel(),
+    viewModel: EditNoteViewModel = hiltViewModel(
+        creationCallback = { factory: EditNoteViewModel.Factory ->
+            factory.create(id)
+        }
+    ),
     onFinished: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
@@ -49,21 +58,21 @@ fun CreateNoteScreen(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                viewModel.processCommand(CreateNoteCommand.AddImage(it))
+                viewModel.processCommand(EditNoteCommand.AddImage(it))
 
             }
         }
     )
 
     when (val currentState = state.value) {
-        is CreateNoteState.Creation -> {
+        is EditNoteState.Editing -> {
             Scaffold(
                 modifier = modifier,
                 topBar = {
                     TopAppBar(
                         title = {
                             Text(
-                                text = stringResource(R.string.create_note),
+                                text = stringResource(R.string.edit_note),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -71,14 +80,15 @@ fun CreateNoteScreen(
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = Color.Transparent,
-                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                            actionIconContentColor = MaterialTheme.colorScheme.onSurface
                         ),
                         navigationIcon = {
                             Icon(
                                 modifier = Modifier
                                     .padding(start = 16.dp, end = 8.dp)
                                     .clickable {
-                                        viewModel.processCommand(CreateNoteCommand.Back)
+                                        viewModel.processCommand(EditNoteCommand.Back)
                                     },
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.back)
@@ -87,13 +97,22 @@ fun CreateNoteScreen(
                         actions = {
                             Icon(
                                 modifier = Modifier
-                                    .padding(end = 24.dp)
+                                    .padding(end = 16.dp)
                                     .clickable {
                                         imagePicker.launch("image/*")
                                     },
                                 imageVector = CustomIcons.AddPhoto,
                                 contentDescription = stringResource(R.string.add_photo_from_gallery),
                                 tint = MaterialTheme.colorScheme.onSurface
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .clickable {
+                                        viewModel.processCommand(EditNoteCommand.Delete)
+                                    },
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = stringResource(R.string.delete_note)
                             )
                         }
                     )
@@ -104,16 +123,9 @@ fun CreateNoteScreen(
                 ) {
                     TextField(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        value = currentState.title,
-                        onValueChange = {
-                            viewModel.processCommand(
-                                CreateNoteCommand.InputTitle(
-                                    title = it
-                                )
-                            )
-                        },
+                            .fillMaxWidth(),
+                        value = currentState.note.title,
+                        onValueChange = { viewModel.processCommand(InputTitle(title = it)) },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
@@ -135,26 +147,25 @@ fun CreateNoteScreen(
                         }
                     )
                     Text(
-                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                        text = DateFormatter.formatCurrentDate(),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = DateFormatter.formatDateToString(currentState.note.updatedAt),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Content(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp),
-                        content = currentState.content,
+                            .weight(1f),
+                        content = currentState.note.content,
+                        onDeleteImageClick = {
+                            viewModel.processCommand(DeleteImage(it))
+                        },
                         onTextChanged = { index, content ->
                             viewModel.processCommand(
-                                CreateNoteCommand.InputContent(
+                                InputContent(
                                     index = index,
                                     content = content
                                 )
                             )
-                        },
-                        onDeleteImageClick = {
-                            viewModel.processCommand(CreateNoteCommand.DeleteImage(it))
                         }
                     )
                     Button(
@@ -162,7 +173,7 @@ fun CreateNoteScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp),
                         onClick = {
-                            viewModel.processCommand(CreateNoteCommand.SaveNote)
+                            viewModel.processCommand(EditNoteCommand.SaveNote)
                         },
                         shape = RoundedCornerShape(10.dp),
                         enabled = currentState.isSaveEnabled,
@@ -181,10 +192,12 @@ fun CreateNoteScreen(
             }
         }
 
-        CreateNoteState.Finished -> {
+        EditNoteState.Finished -> {
             LaunchedEffect(key1 = Unit) {
                 onFinished()
             }
         }
+
+        EditNoteState.Initial -> {}
     }
 }

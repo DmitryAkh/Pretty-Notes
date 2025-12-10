@@ -1,4 +1,4 @@
-package com.dakh.prettynotes.domain
+package com.dakh.prettynotes.domain.entity
 
 sealed interface ContentItem {
 

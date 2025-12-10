@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dakh.prettynotes.presentation.screens.creation.CreateNoteScreen
-import com.dakh.prettynotes.presentation.screens.editing.EditNoteScreen
-import com.dakh.prettynotes.presentation.screens.note.NotesScreen
+import com.dakh.prettynotes.presentation.screen.creation.CreateNoteScreen
+import com.dakh.prettynotes.presentation.screen.editing.EditNoteScreen
+import com.dakh.prettynotes.presentation.screen.note.NotesScreen
 
 @Composable
 fun NavGraph() {

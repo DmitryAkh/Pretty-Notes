@@ -1,7 +1,11 @@
-package com.dakh.prettynotes.data
+package com.dakh.prettynotes.data.db
 
-import com.dakh.prettynotes.domain.ContentItem
-import com.dakh.prettynotes.domain.Note
+import com.dakh.prettynotes.data.models.ContentItemDbModel
+import com.dakh.prettynotes.data.models.ContentType
+import com.dakh.prettynotes.data.models.NoteDBModel
+import com.dakh.prettynotes.data.models.NoteWithContentDbModel
+import com.dakh.prettynotes.domain.entity.ContentItem
+import com.dakh.prettynotes.domain.entity.Note
 
 fun Note.toDBModel(): NoteDBModel {
     return NoteDBModel(

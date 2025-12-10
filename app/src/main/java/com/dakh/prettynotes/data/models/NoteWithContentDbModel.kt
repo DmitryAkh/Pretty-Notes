@@ -1,4 +1,4 @@
-package com.dakh.prettynotes.data
+package com.dakh.prettynotes.data.models
 
 import androidx.room.Embedded
 import androidx.room.Relation
