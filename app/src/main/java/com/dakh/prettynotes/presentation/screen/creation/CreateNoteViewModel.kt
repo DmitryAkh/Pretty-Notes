@@ -1,10 +1,10 @@
-package com.dakh.prettynotes.presentation.screens.creation
+package com.dakh.prettynotes.presentation.screen.creation
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dakh.prettynotes.domain.AddNoteUseCase
-import com.dakh.prettynotes.domain.ContentItem
+import com.dakh.prettynotes.domain.entity.ContentItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,10 +1,10 @@
-package com.dakh.prettynotes.presentation.screens.note
+package com.dakh.prettynotes.presentation.screen.note
 
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dakh.prettynotes.domain.GetAllNotesUseCase
-import com.dakh.prettynotes.domain.Note
+import com.dakh.prettynotes.domain.entity.Note
 import com.dakh.prettynotes.domain.SearchNotesUseCase
 import com.dakh.prettynotes.domain.SwitchPinnedStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
