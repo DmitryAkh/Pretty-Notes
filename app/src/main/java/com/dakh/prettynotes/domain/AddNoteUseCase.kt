@@ -1,5 +1,6 @@
 package com.dakh.prettynotes.domain
 
+import com.dakh.prettynotes.domain.entity.ContentItem
 import javax.inject.Inject
 
 class AddNoteUseCase @Inject constructor(

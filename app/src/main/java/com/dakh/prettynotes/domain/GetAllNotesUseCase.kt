@@ -1,5 +1,6 @@
 package com.dakh.prettynotes.domain
 
+import com.dakh.prettynotes.domain.entity.Note
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

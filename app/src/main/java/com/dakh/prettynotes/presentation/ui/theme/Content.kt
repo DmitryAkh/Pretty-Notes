@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.dakh.prettynotes.R
-import com.dakh.prettynotes.domain.ContentItem
+import com.dakh.prettynotes.domain.entity.ContentItem
 
 
 

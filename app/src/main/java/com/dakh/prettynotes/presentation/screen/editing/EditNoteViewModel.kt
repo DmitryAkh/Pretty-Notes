@@ -1,13 +1,13 @@
-package com.dakh.prettynotes.presentation.screens.editing
+package com.dakh.prettynotes.presentation.screen.editing
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dakh.prettynotes.domain.ContentItem
 import com.dakh.prettynotes.domain.DeleteNoteUseCase
 import com.dakh.prettynotes.domain.EditNoteUseCase
 import com.dakh.prettynotes.domain.GetNoteUseCase
-import com.dakh.prettynotes.domain.Note
+import com.dakh.prettynotes.domain.entity.ContentItem
+import com.dakh.prettynotes.domain.entity.Note
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,7 +25,6 @@ class EditNoteViewModel @AssistedInject constructor(
     private val deleteNoteUseCase: DeleteNoteUseCase,
 ) : ViewModel() {
 
-
     private val _state = MutableStateFlow<EditNoteState>(EditNoteState.Initial)
     val state = _state.asStateFlow()
 
@@ -37,7 +36,7 @@ class EditNoteViewModel @AssistedInject constructor(
             } else {
                 note.content
             }
-            _state.update { state ->
+            _state.update {
                 EditNoteState.Editing(note.copy(content = content))
             }
         }
@@ -46,9 +45,8 @@ class EditNoteViewModel @AssistedInject constructor(
     fun processCommand(command: EditNoteCommand) {
         when (command) {
             EditNoteCommand.Back -> {
-                _state.update {
+                _state.value =
                     EditNoteState.Finished
-                }
             }
 
             is EditNoteCommand.InputContent -> {
@@ -85,30 +83,24 @@ class EditNoteViewModel @AssistedInject constructor(
 
             EditNoteCommand.SaveNote -> {
                 viewModelScope.launch {
-                    _state.update { state ->
-                        if (state is EditNoteState.Editing) {
-                            val note = state.note
-                            val content = note.content.filter {
-                                it !is ContentItem.Text || it.content.isNotBlank()
-                            }
-                            editNoteUseCase(note.copy(content = content))
-                            EditNoteState.Finished
-                        } else {
-                            state
+                    val state = _state.value
+                    if (state is EditNoteState.Editing) {
+                        val note = state.note
+                        val content = note.content.filter {
+                            it !is ContentItem.Text || it.content.isNotBlank()
                         }
+                        editNoteUseCase(note.copy(content = content))
+                        _state.value = EditNoteState.Finished
                     }
                 }
             }
 
             EditNoteCommand.Delete -> {
                 viewModelScope.launch {
-                    _state.update { state ->
-                        if (state is EditNoteState.Editing) {
-                            deleteNoteUseCase(state.note.id)
-                            EditNoteState.Finished
-                        } else {
-                            state
-                        }
+                    val state = _state.value
+                    if (state is EditNoteState.Editing) {
+                        deleteNoteUseCase(state.note.id)
+                        _state.value = EditNoteState.Finished
                     }
                 }
             }

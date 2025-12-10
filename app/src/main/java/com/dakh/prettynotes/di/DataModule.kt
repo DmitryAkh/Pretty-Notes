@@ -2,9 +2,9 @@ package com.dakh.prettynotes.di
 
 import android.content.Context
 import androidx.room.Room
-import com.dakh.prettynotes.data.NotesDao
-import com.dakh.prettynotes.data.NotesDatabase
 import com.dakh.prettynotes.data.NotesRepositoryImpl
+import com.dakh.prettynotes.data.db.NotesDao
+import com.dakh.prettynotes.data.db.NotesDatabase
 import com.dakh.prettynotes.domain.NotesRepository
 import dagger.Binds
 import dagger.Module

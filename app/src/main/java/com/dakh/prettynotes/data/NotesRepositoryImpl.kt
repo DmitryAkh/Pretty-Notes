@@ -1,7 +1,13 @@
 package com.dakh.prettynotes.data
 
-import com.dakh.prettynotes.domain.ContentItem
-import com.dakh.prettynotes.domain.Note
+import com.dakh.prettynotes.data.db.NotesDao
+import com.dakh.prettynotes.data.db.toContentItemDbModels
+import com.dakh.prettynotes.data.db.toDBModel
+import com.dakh.prettynotes.data.db.toListNote
+import com.dakh.prettynotes.data.db.toNote
+import com.dakh.prettynotes.data.models.NoteDBModel
+import com.dakh.prettynotes.domain.entity.ContentItem
+import com.dakh.prettynotes.domain.entity.Note
 import com.dakh.prettynotes.domain.NotesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

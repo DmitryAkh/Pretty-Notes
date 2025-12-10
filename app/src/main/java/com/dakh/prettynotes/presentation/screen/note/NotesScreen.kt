@@ -1,4 +1,4 @@
-package com.dakh.prettynotes.presentation.screens.note
+package com.dakh.prettynotes.presentation.screen.note
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.dakh.prettynotes.R
-import com.dakh.prettynotes.domain.ContentItem
-import com.dakh.prettynotes.domain.Note
+import com.dakh.prettynotes.domain.entity.ContentItem
+import com.dakh.prettynotes.domain.entity.Note
 import com.dakh.prettynotes.presentation.ui.theme.OtherNotesColors
 import com.dakh.prettynotes.presentation.ui.theme.PinnedNotesColors
 import com.dakh.prettynotes.presentation.utils.DateFormatter
@@ -338,7 +338,7 @@ fun TitleAndDateWithImage(
     date: String
 ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
         ) {
             AsyncImage(
