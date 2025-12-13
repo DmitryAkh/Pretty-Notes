@@ -3,10 +3,11 @@ package com.dakh.prettynotes.presentation.screen.note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dakh.prettynotes.domain.DeleteNoteUseCase
 import com.dakh.prettynotes.domain.GetAllNotesUseCase
-import com.dakh.prettynotes.domain.entity.Note
 import com.dakh.prettynotes.domain.SearchNotesUseCase
 import com.dakh.prettynotes.domain.SwitchPinnedStatusUseCase
+import com.dakh.prettynotes.domain.entity.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class NotesViewModel @Inject constructor(
     private val getAllNotesUseCase: GetAllNotesUseCase,
     private val switchPinnedStatusUseCase: SwitchPinnedStatusUseCase,
-    private val searchNotesUseCase: SearchNotesUseCase
+    private val searchNotesUseCase: SearchNotesUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
@@ -66,20 +68,39 @@ class NotesViewModel @Inject constructor(
                 is NotesCommand.SwitchPinnedStatus -> {
                     switchPinnedStatusUseCase(command.id)
                 }
+
+                is NotesCommand.DeleteNote -> {
+                    deleteNoteUseCase(command.id)
+                }
+
+                is NotesCommand.SwipeNote -> {
+             _state.update {state ->
+                 val oldSwipeStatus = state.notesSwipeStatus
+                 state.copy(notesSwipeStatus = oldSwipeStatus + (command.id to command.isSwiped))
+             }
+                }
+
+                NotesCommand.CloseAllSwipes -> {
+                    _state.update {
+                        it.copy(notesSwipeStatus = mapOf())
+                    }
+                }
             }
         }
-
     }
-
 }
 
 sealed interface NotesCommand {
     data class InputSearchQuery(val query: String) : NotesCommand
     data class SwitchPinnedStatus(val id: Int) : NotesCommand
+    data class DeleteNote(val id: Int) : NotesCommand
+    data class SwipeNote(val id: Int, val isSwiped: Boolean) : NotesCommand
+    data object CloseAllSwipes: NotesCommand
 }
 
 data class NotesScreenState(
     val query: String = "",
     val pinnedNotes: List<Note> = listOf(),
     val otherNotes: List<Note> = listOf(),
+    val notesSwipeStatus: Map<Int, Boolean> = mapOf(),
 )

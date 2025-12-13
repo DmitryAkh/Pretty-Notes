@@ -20,4 +20,7 @@
     <string name="image_from_gallery">Image from gallery</string>
     <string name="just_now">Just now</string>
     <string name="h_ago">%1$d h ago</string>
+    <string name="delete">Delete</string>
+    <string name="pin">Pin</string>
+    <string name="pin_note">Pin note</string>
 </resources>
