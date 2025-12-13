@@ -3,7 +3,10 @@ package com.dakh.prettynotes.presentation.screen.creation
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,8 +26,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,135 +60,151 @@ fun CreateNoteScreen(
         }
     )
 
-    when (val currentState = state.value) {
-        is CreateNoteState.Creation -> {
-            Scaffold(
-                modifier = modifier,
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(R.string.create_note),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Transparent,
-                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        navigationIcon = {
-                            Icon(
-                                modifier = Modifier
-                                    .padding(start = 16.dp, end = 8.dp)
-                                    .clickable {
-                                        viewModel.processCommand(CreateNoteCommand.Back)
-                                    },
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        },
-                        actions = {
-                            Icon(
-                                modifier = Modifier
-                                    .padding(end = 24.dp)
-                                    .clickable {
-                                        imagePicker.launch("image/*")
-                                    },
-                                imageVector = CustomIcons.AddPhoto,
-                                contentDescription = stringResource(R.string.add_photo_from_gallery),
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    )
-                }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        value = currentState.title,
-                        onValueChange = {
-                            viewModel.processCommand(
-                                CreateNoteCommand.InputTitle(
-                                    title = it
+    val focusManager = LocalFocusManager.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                focusManager.clearFocus()
+            }
+    ) {
+
+        when (val currentState = state.value) {
+            is CreateNoteState.Creation -> {
+                Scaffold(
+                    modifier = modifier,
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    text = stringResource(R.string.create_note),
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
-                            )
-                        },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        textStyle = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.title),
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Transparent,
+                                navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                            ),
+                            navigationIcon = {
+                                Icon(
+                                    modifier = Modifier
+                                        .padding(start = 16.dp, end = 8.dp)
+                                        .clickable {
+                                            viewModel.processCommand(CreateNoteCommand.Back)
+                                        },
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(R.string.back)
+                                )
+                            },
+                            actions = {
+                                Icon(
+                                    modifier = Modifier
+                                        .padding(end = 24.dp)
+                                        .clickable {
+                                            imagePicker.launch("image/*")
+                                        },
+                                    imageVector = CustomIcons.AddPhoto,
+                                    contentDescription = stringResource(R.string.add_photo_from_gallery),
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        )
+                    }
+                ) { innerPadding ->
+                    Column(
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        TextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            value = currentState.title,
+                            onValueChange = {
+                                viewModel.processCommand(
+                                    CreateNoteCommand.InputTitle(
+                                        title = it
+                                    )
+                                )
+                            },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            textStyle = TextStyle(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-                            )
-                        }
-                    )
-                    Text(
-                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                        text = DateFormatter.formatCurrentDate(),
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Content(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp),
-                        content = currentState.content,
-                        onTextChanged = { index, content ->
-                            viewModel.processCommand(
-                                CreateNoteCommand.InputContent(
-                                    index = index,
-                                    content = content
+                                color = MaterialTheme.colorScheme.onSurface
+                            ),
+                            placeholder = {
+                                Text(
+                                    text = stringResource(R.string.title),
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                                 )
-                            )
-                        },
-                        onDeleteImageClick = {
-                            viewModel.processCommand(CreateNoteCommand.DeleteImage(it))
-                        }
-                    )
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        onClick = {
-                            viewModel.processCommand(CreateNoteCommand.SaveNote)
-                        },
-                        shape = RoundedCornerShape(10.dp),
-                        enabled = currentState.isSaveEnabled,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.save_note),
+                            }
                         )
+                        Text(
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                            text = DateFormatter.formatCurrentDate(),
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Content(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
+                            content = currentState.content,
+                            onTextChanged = { index, content ->
+                                viewModel.processCommand(
+                                    CreateNoteCommand.InputContent(
+                                        index = index,
+                                        content = content
+                                    )
+                                )
+                            },
+                            onDeleteImageClick = {
+                                viewModel.processCommand(CreateNoteCommand.DeleteImage(it))
+                            }
+                        )
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 24.dp),
+                            onClick = {
+                                viewModel.processCommand(CreateNoteCommand.SaveNote)
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            enabled = currentState.isSaveEnabled,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                disabledContainerColor = MaterialTheme.colorScheme.primary.copy(
+                                    alpha = 0.1f
+                                ),
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                disabledContentColor = MaterialTheme.colorScheme.onPrimary
+                            ),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.save_note),
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        CreateNoteState.Finished -> {
-            LaunchedEffect(key1 = Unit) {
-                onFinished()
+            CreateNoteState.Finished -> {
+                LaunchedEffect(key1 = Unit) {
+                    onFinished()
+                }
             }
         }
     }

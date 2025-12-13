@@ -31,7 +31,6 @@ import com.dakh.prettynotes.R
 import com.dakh.prettynotes.domain.entity.ContentItem
 
 
-
 @Composable
 fun Content(
     modifier: Modifier = Modifier,
@@ -106,7 +105,7 @@ private fun ImageContent(
                 },
             imageVector = Icons.Default.Close,
             contentDescription = stringResource(R.string.remove_image),
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onPrimary
         )
     }
 }
