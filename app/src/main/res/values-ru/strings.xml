@@ -21,4 +21,6 @@
     <string name="image_from_gallery">Изображение из галлереи</string>
     <string name="just_now">Только что</string>
     <string name="h_ago">%1$d h ago</string>
+    <string name="delete">Удалить</string>
+    <string name="pin">Закрепить</string>
 </resources>
