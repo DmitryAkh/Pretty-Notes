@@ -32,6 +32,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Search
@@ -293,7 +294,19 @@ private fun SearchBar(
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
-        )
+        ),
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        onQueryChange("")
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.clear_search_area),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
     )
 }
 
