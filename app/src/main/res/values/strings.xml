@@ -23,4 +23,5 @@
     <string name="delete">Delete</string>
     <string name="pin">Pin</string>
     <string name="pin_note">Pin note</string>
+    <string name="clear_search_area">Clear search area</string>
 </resources>
